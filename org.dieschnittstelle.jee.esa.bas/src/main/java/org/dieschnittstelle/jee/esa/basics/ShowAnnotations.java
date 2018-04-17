@@ -1,8 +1,18 @@
+/**
+ *
+ * @since v1.0
+ * @version v2.0
+ */
 package org.dieschnittstelle.jee.esa.basics;
 
 
 import org.dieschnittstelle.jee.esa.basics.annotations.AnnotatedStockItemBuilder;
+import org.dieschnittstelle.jee.esa.basics.annotations.DisplayAs;
 import org.dieschnittstelle.jee.esa.basics.annotations.StockItemProxyImpl;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import static org.dieschnittstelle.jee.esa.utils.Utils.*;
 
@@ -29,8 +39,46 @@ public class ShowAnnotations {
 	/*
 	 * UE BAS2 
 	 */
-	private static void showAttributes(Object consumable) {
+	/*private static void showAttributes(Object consumable) {
 		show("class is: " + consumable.getClass());
+	}*/
+	private static void showAttributes(Object consumable) {
+
+		Class consumableClass = consumable.getClass();
+		String formattedString = consumableClass.getSimpleName();
+		ArrayList<String> formattedFieldStrings = new ArrayList<>();
+
+		for (Field field : consumableClass.getDeclaredFields()) {
+			String fielDisplayName = field.getName();
+
+			DisplayAs displayAsAnnotation = field.getAnnotation(DisplayAs.class);
+			if (displayAsAnnotation != null)
+				fielDisplayName = displayAsAnnotation.value();
+
+			formattedFieldStrings.add(" " + fielDisplayName + ": " + getFieldValue(field, consumable));
+		}
+
+		formattedString += String.join(",", formattedFieldStrings);
+		show("{" + formattedString + "}");
 	}
 
+	private static Object getFieldValue(Field field, Object instance) {
+		Object fieldValue = null;
+
+		try {
+			Method fieldGetter = instance.getClass().getDeclaredMethod(getAccessorNameForField("get", field.getName()));
+			fieldValue = fieldGetter.invoke(instance);
+		} catch (Exception e) {
+			try {
+				field.setAccessible(true);
+				fieldValue = field.get(instance);
+			} catch (IllegalAccessException iae) {
+			}
+		}
+
+		return fieldValue;
+	}
+	private static String getAccessorNameForField(String accessor,String fieldName) {
+		return accessor + fieldName.substring(0,1).toUpperCase() + fieldName.substring(1);
+	}
 }

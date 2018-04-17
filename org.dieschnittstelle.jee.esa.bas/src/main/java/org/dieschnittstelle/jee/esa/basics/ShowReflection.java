@@ -16,5 +16,4 @@ public class ShowReflection {
 		// ... and let them consume
 		consumer.doShopping(collection.getStockItems());
 	}
-
 }
