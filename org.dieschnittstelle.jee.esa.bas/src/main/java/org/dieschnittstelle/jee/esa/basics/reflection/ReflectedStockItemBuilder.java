@@ -1,5 +1,11 @@
+/**
+ * @since v1.0
+ * @version v2.0
+ */
+
 package org.dieschnittstelle.jee.esa.basics.reflection;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,17 +62,32 @@ public class ReflectedStockItemBuilder implements IStockItemBuilder {
 			Class<?> klass = Class.forName(instanceAttributes.get("class"));
 			IStockItem instance = (IStockItem) klass.newInstance();
 
-//			for (Field field : klass.getDeclaredFields()) {
-//				show("found field: " + field.getClass() + " of name " + field.getName());
-//			}
-//			
-//			for (Method method : klass.getDeclaredMethods()) {
-//				show("found method: " + method.getClass() + " of name " + method.getName());
-//			}
+			for (Field field : klass.getDeclaredFields()) {
+				show("found field: " + field.getClass() + " of name " + field.getName());
+			}
+//			Interieren über Methoden(in diesem kontext Tags einer XML)
+			for (Method method : klass.getDeclaredMethods()) {
+				show("found method: " + method.getClass() + " of name " + method.getName());
+			}
 						
 			instance.initialise(Integer.parseInt(instanceAttributes.get("units")),
 					instanceAttributes.get("brandname"));
-			
+
+			/**
+			 * eingefügt in der SU
+			 */
+			//show interfaces and superclass
+			//show("got superclass: %s", klass.getSuperclass());
+			//show("got interfaces: %s", Arrays.asList(klass.getInterfaces()));
+
+			//create instancce
+			//instance = (IStockItem) klass.newInstance();
+			//instance.initialise(Integer.parseInt(instanceAttributes.get("units")), instanceAttributes);
+			//show("instnace %s", instance);
+
+			/**
+			 * war schon drin:
+			 */
 			/**
 			 * fuegen Sie hier die Erweiterungen fuer Uebungsaufgabe BAS1 ein
 			 */
@@ -77,7 +98,9 @@ public class ReflectedStockItemBuilder implements IStockItemBuilder {
 
 			for (String key : instanceAttributes.keySet()) {
 				// determine the name of the setter
-				String setterName = "set" + key.substring(0,1).toUpperCase() + key.substring(1);
+				//String setterName = "set" + key.substring(0,1).toUpperCase() + key.substring(1);
+				String setterName = getAccessorNameForField("set", key); //same like above line, exportet in method
+				Method setterMethod = klass.getDeclaredMethod(setterName, new Class[] {field.getT})
 				Method setterMethod = null;
 				// iterate over the methods
 				for (Method setter: klass.getDeclaredMethods()) {
@@ -85,7 +108,6 @@ public class ReflectedStockItemBuilder implements IStockItemBuilder {
 						setterMethod = setter;
 					}
 				}
-				
 				logger.info("found setter: " + setterMethod);
 				// check the type
 				Class<?> type = setterMethod.getParameterTypes()[0];
