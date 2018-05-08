@@ -1,5 +1,6 @@
 package org.dieschnittstelle.jee.esa.ser;
 
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import javax.servlet.http.HttpServlet;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import static org.dieschnittstelle.jee.esa.utils.Utils.*;
 
 import org.apache.log4j.Logger;
+import org.dieschnittstelle.jee.esa.entities.crm.AbstractTouchpoint;
 
 public class TouchpointServiceServlet extends HttpServlet {
 
@@ -49,10 +51,9 @@ public class TouchpointServiceServlet extends HttpServlet {
 
 	}
 	
-	/*
-	@Override	
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) {
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 
 		// assume POST will only be used for touchpoint creation, i.e. there is
 		// no need to check the uri that has been used
@@ -61,9 +62,11 @@ public class TouchpointServiceServlet extends HttpServlet {
 
 		try {
 			// create an ObjectInputStream from the request's input stream
-		
+			ObjectInputStream oos = request.getInputStream(request.getInputStream());
 			// read an AbstractTouchpoint object from the stream
-		
+			AbstractTouchpoint tp = (AbstractTouchpoint)oos.readObject();
+			show("got Object: %s", tp);
+
 			// call the create method on the executor and take its return value
 		
 			// set the response status as successful, using the appropriate
@@ -79,8 +82,4 @@ public class TouchpointServiceServlet extends HttpServlet {
 		}
 
 	}
-	*/
-
-
-	
 }

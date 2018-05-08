@@ -1,7 +1,9 @@
 package org.dieschnittstelle.jee.esa.ser.client;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -9,7 +11,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.concurrent.FutureCallback;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.nio.client.HttpAsyncClient;
@@ -127,7 +131,7 @@ public class ShowTouchpointService {
 			Future<HttpResponse> responseFuture = client.execute(get, null);
 			logger.info("readAllTouchpoints(): received response future...");
 
-			HttpResponse response = responseFuture.get();
+			HttpResponse response = responseFuture.get(); //@Präsi -> get ist syncron
 			logger.info("readAllTouchpoints(): received response value");
 
 			// check the response status
@@ -192,19 +196,44 @@ public class ShowTouchpointService {
 		try {
 
 			// create post request for the api/touchpoints uri
-
+			HttpPost request = new HttpPost("http://localhost:8888/demo.org.dieschnittstelle.");
 			// create an ObjectOutputStream from a ByteArrayOutputStream - the
 			// latter must be accessible via a variable
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(bos);
 
 			// write the object to the output stream
-
+			oos.writeObject(tp);
+			ByteArrayEntity bae = new ByteArrayEntity(bos.toByteArray());
 			// create a ByteArrayEntity and pass it the byte array from the
 			// output stream
 
 			// set the entity on the request
+			request.setEntity(bae);
 
 			// execute the request, which will return a HttpResponse object
+			client.execute(request, new FutureCallback<HttpResponse>() {
+				@Override
+				public void completed(HttpResponse httpResponse) {
+					show("HttpResponse: %s", httpResponse);
 
+					if(httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
+						show("got success status",);
+					}
+				}
+
+				@Override
+				public void failed(Exception e) {
+
+				}
+
+				@Override
+				public void cancelled() {
+
+				}
+			})
+
+			Thread.sleep(1000);
 			// log the status line
 
 			// evaluate the result using getStatusLine(), use constants in
