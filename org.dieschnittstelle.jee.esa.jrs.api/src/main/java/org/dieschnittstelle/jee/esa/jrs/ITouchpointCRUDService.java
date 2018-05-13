@@ -4,6 +4,7 @@ import org.dieschnittstelle.jee.esa.entities.crm.StationaryTouchpoint;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+
 import java.util.List;
 
 @Path("/touchpoints")
@@ -28,5 +29,4 @@ public interface ITouchpointCRUDService {
 	/*
 	 * UE JRS1: add a new annotated method for using the updateTouchpoint functionality of TouchpointCRUDExecutor and implement it
 	 */
-	
 }
