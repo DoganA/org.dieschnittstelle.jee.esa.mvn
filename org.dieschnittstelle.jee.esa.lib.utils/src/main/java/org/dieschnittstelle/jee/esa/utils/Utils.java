@@ -15,8 +15,17 @@ public class Utils {
 	 * this method has been proved very useful for live demos in WS14/15
 	 * @param content
 	 */
-	public static void show(Object content) {
-		logger.info("------------ " + content + "\n");
+	public static void show(Object msg,Object... args) {
+		String formatedmsg = "------------ ";
+
+		if (msg != null && msg instanceof String && args != null && args.length > 0) {
+			formatedmsg += String.format((String)msg,args);
+		}
+		else {
+			formatedmsg += msg;
+		}
+
+		logger.info(formatedmsg + "\n");
 	}
 
 	/** 
