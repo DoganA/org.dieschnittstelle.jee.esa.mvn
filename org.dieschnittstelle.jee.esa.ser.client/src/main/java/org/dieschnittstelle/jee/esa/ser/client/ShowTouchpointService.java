@@ -59,6 +59,7 @@ public class ShowTouchpointService {
 		 * list of touchpoints
 		 */
 		client = Http.createAsyncClient();
+		client.start();
 	}
 
 	/**
@@ -66,7 +67,7 @@ public class ShowTouchpointService {
 	 */
 	public void run() {
 
-		client.start();
+		//client.start();
 
 		// 1) read out all touchpoints
 		List<AbstractTouchpoint> touchpoints = readAllTouchpoints();
@@ -175,8 +176,6 @@ public class ShowTouchpointService {
 	public void deleteTouchpoint(AbstractTouchpoint tp) {
 		logger.info("deleteTouchpoint(): will delete: " + tp);
 
-		logger.info("deleteTouchpoint(): will delete: " + tp);
-
 		// once you have received a response this is necessary to be able to
 		// use the client for subsequent requests:
 		// EntityUtils.consume(response.getEntity());
@@ -185,6 +184,7 @@ public class ShowTouchpointService {
 			// create delete request for the api/touchpoints uri
 			HttpDelete delete = new HttpDelete("http://localhost:8888/org.dieschnittstelle.jee.esa.ser/api/touchpoints/" + tp.getId());
 			HttpResponse response = client.execute(delete);
+
 			//response.setStatusCode(HttpStatus.SC_OK);
 			/* if successful: */
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NO_CONTENT) {
@@ -222,9 +222,9 @@ public class ShowTouchpointService {
 
 			// create post request for the api/touchpoints uri
 			HttpPost request = new HttpPost("http://localhost:8888/demo.org.dieschnittstelle.");
-			"http://localhost:8888/org.dieschnittstelle.jee.esa.ser/api/touchpoints");
 
-// create an ObjectOutputStream from a ByteArrayOutputStream - the
+
+		// create an ObjectOutputStream from a ByteArrayOutputStream - the
 			// latter must be accessible via a variable
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(bos);
