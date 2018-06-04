@@ -100,7 +100,7 @@ public class ReflectedStockItemBuilder implements IStockItemBuilder {
 				// determine the name of the setter
 				//String setterName = "set" + key.substring(0,1).toUpperCase() + key.substring(1);
 				String setterName = getAccessorNameForField("set", key); //same like above line, exportet in method
-				Method setterMethod = klass.getDeclaredMethod(setterName, new Class[] {field.getT})
+				//Method setterMethod = klass.getDeclaredMethod(setterName, new Class[] {field.getT});
 				Method setterMethod = null;
 				// iterate over the methods
 				for (Method setter: klass.getDeclaredMethods()) {

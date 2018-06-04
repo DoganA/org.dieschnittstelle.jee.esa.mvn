@@ -49,13 +49,13 @@ public class ShowAnnotations {
 		ArrayList<String> formattedFieldStrings = new ArrayList<>();
 
 		for (Field field : consumableClass.getDeclaredFields()) {
-			String fielDisplayName = field.getName();
+			String fieldDisplayName = field.getName();
 
 			DisplayAs displayAsAnnotation = field.getAnnotation(DisplayAs.class);
 			if (displayAsAnnotation != null)
-				fielDisplayName = displayAsAnnotation.value();
+				fieldDisplayName = displayAsAnnotation.value();
 
-			formattedFieldStrings.add(" " + fielDisplayName + ": " + getFieldValue(field, consumable));
+			formattedFieldStrings.add(" " + fieldDisplayName + ": " + getFieldValue(field, consumable));
 		}
 
 		formattedString += String.join(",", formattedFieldStrings);

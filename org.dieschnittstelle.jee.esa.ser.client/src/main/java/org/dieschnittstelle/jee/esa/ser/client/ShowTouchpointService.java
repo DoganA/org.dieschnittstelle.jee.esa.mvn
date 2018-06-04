@@ -10,6 +10,7 @@ import java.util.concurrent.Future;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.concurrent.FutureCallback;
@@ -174,10 +175,34 @@ public class ShowTouchpointService {
 	public void deleteTouchpoint(AbstractTouchpoint tp) {
 		logger.info("deleteTouchpoint(): will delete: " + tp);
 
+		logger.info("deleteTouchpoint(): will delete: " + tp);
+
 		// once you have received a response this is necessary to be able to
 		// use the client for subsequent requests:
 		// EntityUtils.consume(response.getEntity());
+		try {
 
+			// create delete request for the api/touchpoints uri
+			HttpDelete delete = new HttpDelete("http://localhost:8888/org.dieschnittstelle.jee.esa.ser/api/touchpoints/" + tp.getId());
+			HttpResponse response = client.execute(delete);
+			//response.setStatusCode(HttpStatus.SC_OK);
+			/* if successful: */
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NO_CONTENT) {
+				logger.info("deleted touchpointid: " + tp.getId());
+				logger.info("delete successful: " + response.getStatusLine().getStatusCode());
+
+				// cleanup the request
+				EntityUtils.consume(response.getEntity());
+			} else {
+				String err = "Got status code: " + response.getStatusLine().getStatusCode();
+				logger.error(err);
+				throw new RuntimeException(err);
+			}
+			EntityUtils.consume(response.getEntity());
+		} catch (Exception e) {
+			logger.error("got exception: " + e, e);
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -187,7 +212,7 @@ public class ShowTouchpointService {
 	 * Hinweise auf:
 	 * http://stackoverflow.com/questions/10146692/how-do-i-write-to
 	 * -an-outpustream-using-defaulthttpclient
-	 * 
+	 *
 	 * @param tp
 	 */
 	public AbstractTouchpoint createNewTouchpoint(AbstractTouchpoint tp) {
@@ -197,13 +222,17 @@ public class ShowTouchpointService {
 
 			// create post request for the api/touchpoints uri
 			HttpPost request = new HttpPost("http://localhost:8888/demo.org.dieschnittstelle.");
-			// create an ObjectOutputStream from a ByteArrayOutputStream - the
+			"http://localhost:8888/org.dieschnittstelle.jee.esa.ser/api/touchpoints");
+
+// create an ObjectOutputStream from a ByteArrayOutputStream - the
 			// latter must be accessible via a variable
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(bos);
 
 			// write the object to the output stream
 			oos.writeObject(tp);
+			show(bos.toByteArray());
+
 			ByteArrayEntity bae = new ByteArrayEntity(bos.toByteArray());
 			// create a ByteArrayEntity and pass it the byte array from the
 			// output stream
