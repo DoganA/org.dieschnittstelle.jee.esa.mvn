@@ -24,7 +24,6 @@ public class Utils {
 		else {
 			formatedmsg += msg;
 		}
-
 		logger.info(formatedmsg + "\n");
 	}
 
