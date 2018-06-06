@@ -9,10 +9,14 @@ import java.util.concurrent.Future;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+<<<<<<< HEAD
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
+=======
+import org.apache.http.client.methods.HttpGet;
+>>>>>>> 9bdb891914b4ce1b9c18c50c7878da0d96b5571c
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
