@@ -43,8 +43,7 @@ public class ProductCRUDService {
 		return false;
 	}
 
-	public IndividualisedProductItem readProduct(long id) {
+	public IndividualisedProductItem readProduct(long id)
 		return null;
 	}
-
 }
